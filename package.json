@@ -1,6 +1,7 @@
 {
   "name": "meelio",
   "version": "0.8.1",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "turbo run build",
