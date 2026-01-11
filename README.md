@@ -48,11 +48,25 @@ pnpm dev              # Run all apps in dev mode
 pnpm build            # Build all apps
 pnpm build:web        # Build web app
 pnpm build:extension  # Build extension
+pnpm package          # Package extension (by default packages Chrome, you can do package:edge etc. for other packages)
 pnpm lint             # Lint all packages
 pnpm format           # Format code
 pnpm clean            # Clean build artifacts
 pnpm test             # Run tests
 ```
+
+## Loading the Extension Locally
+
+1. Build the extension:
+   ```bash
+   pnpm build:extension
+   ```
+
+2. Open Chrome and navigate to `chrome://extensions`
+
+3. Enable **Developer mode** (toggle in the top right)
+
+4. Click **Load unpacked** and select the `apps/extension/build/chrome-mv3-prod` directory
 
 ## Features
 
