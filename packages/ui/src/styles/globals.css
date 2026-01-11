@@ -4,21 +4,6 @@
 
 @layer base {
   :root {
-    --half-height: 0.72em;
-    --border-radius: 0.05em;
-    --flip: #f0f0f0;
-    --flip-bottom: #e0e0e0;
-    --flip-gradient-top: #ffffff;
-    --flip-gradient-bottom: #e0e0e0;
-
-    --home-p-t: 0;
-    --home-p-b: 1rem;
-    --home-p-r: 0rem;
-    --home-p-l: 0rem;
-
-    --home-grid-block-col-size: 10px;
-    --home-grid-block-row-size: 10px;
-
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
@@ -61,13 +46,6 @@
   }
 
   .dark {
-    --half-height: 0.72em;
-    --border-radius: 0.05em;
-    --flip: #101010;
-    --flip-bottom: #121212;
-    --flip-gradient-top: #222222;
-    --flip-gradient-bottom: #111111;
-
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
     --card: 20 14.3% 4.1%;
@@ -154,7 +132,6 @@ html {
   @apply border border-white/10 bg-white/5 backdrop-blur-lg;
 }
 
-
 .tiptap {
   :first-child {
     margin-top: 0;
@@ -173,7 +150,7 @@ html {
   }
 
   /* Task list specific styles */
-  ul[data-type='taskList'] {
+  ul[data-type="taskList"] {
     list-style: none;
     margin-left: 0;
     padding: 0;
@@ -193,11 +170,11 @@ html {
       }
     }
 
-    input[type='checkbox'] {
+    input[type="checkbox"] {
       cursor: pointer;
     }
 
-    ul[data-type='taskList'] {
+    ul[data-type="taskList"] {
       margin: 0;
     }
   }
