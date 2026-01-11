@@ -1,6 +1,17 @@
+<div align="center">
+
 # Meelio
 
 A productivity and focus application built as a Turborepo monorepo. Fully offline-first - all data is stored locally.
+
+<br />
+
+<img src="https://meelio.io/screenshot.webp" alt="Meelio Screenshot" width="800" />
+
+<br />
+<br />
+
+</div>
 
 ## Apps
 
