@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { SidebarTrigger } from "@repo/ui/components/ui/sidebar";
 import { cn } from "@repo/ui/lib/utils";
-import { MoreHorizontal, Sparkles, ClipboardList, Bell } from "lucide-react";
+import { MoreHorizontal, Sparkles, ClipboardList, Bell, UtensilsCrossed, Dumbbell } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Icons } from "../../../components/icons/icons";
@@ -80,12 +80,16 @@ export const Dock = () => {
     toggleFigaroBriefing,
     toggleFigaroLists,
     toggleFigaroReminders,
+    toggleFigaroNutrition,
+    toggleFigaroFitness,
     resetDock,
     dockIconsVisible,
     isBookmarksVisible,
     isFigaroBriefingVisible,
     isFigaroListsVisible,
     isFigaroRemindersVisible,
+    isFigaroNutritionVisible,
+    isFigaroFitnessVisible,
   } = useDockStore(
     useShallow((state) => ({
       isTimerVisible: state.isTimerVisible,
@@ -110,11 +114,15 @@ export const Dock = () => {
       toggleFigaroBriefing: state.toggleFigaroBriefing,
       toggleFigaroLists: state.toggleFigaroLists,
       toggleFigaroReminders: state.toggleFigaroReminders,
+      toggleFigaroNutrition: state.toggleFigaroNutrition,
+      toggleFigaroFitness: state.toggleFigaroFitness,
       dockIconsVisible: state.dockIconsVisible,
       isBookmarksVisible: state.isBookmarksVisible,
       isFigaroBriefingVisible: state.isFigaroBriefingVisible,
       isFigaroListsVisible: state.isFigaroListsVisible,
       isFigaroRemindersVisible: state.isFigaroRemindersVisible,
+      isFigaroNutritionVisible: state.isFigaroNutritionVisible,
+      isFigaroFitnessVisible: state.isFigaroFitnessVisible,
     }))
   );
 
@@ -141,6 +149,8 @@ export const Dock = () => {
       { id: "figaro-briefing", name: "Figaro", icon: Sparkles, activeIcon: Sparkles, onClick: toggleFigaroBriefing, visibilityKey: "figaroBriefing" as const },
       { id: "figaro-lists", name: "Lists", icon: ClipboardList, activeIcon: ClipboardList, onClick: toggleFigaroLists, visibilityKey: "figaroLists" as const },
       { id: "figaro-reminders", name: "Reminders", icon: Bell, activeIcon: Bell, onClick: toggleFigaroReminders, visibilityKey: "figaroReminders" as const },
+      { id: "figaro-nutrition", name: "Nutrition", icon: UtensilsCrossed, activeIcon: UtensilsCrossed, onClick: toggleFigaroNutrition, visibilityKey: "figaroNutrition" as const },
+      { id: "figaro-fitness", name: "Fitness", icon: Dumbbell, activeIcon: Dumbbell, onClick: toggleFigaroFitness, visibilityKey: "figaroFitness" as const },
     ];
 
     return allItems.filter(item =>
@@ -161,6 +171,8 @@ export const Dock = () => {
     toggleFigaroBriefing,
     toggleFigaroLists,
     toggleFigaroReminders,
+    toggleFigaroNutrition,
+    toggleFigaroFitness,
     dockIconsVisible,
   ]);
 
@@ -285,7 +297,9 @@ export const Dock = () => {
                 (item.id === "bookmarks" && isBookmarksVisible) ||
                 (item.id === "figaro-briefing" && isFigaroBriefingVisible) ||
                 (item.id === "figaro-lists" && isFigaroListsVisible) ||
-                (item.id === "figaro-reminders" && isFigaroRemindersVisible);
+                (item.id === "figaro-reminders" && isFigaroRemindersVisible) ||
+                (item.id === "figaro-nutrition" && isFigaroNutritionVisible) ||
+                (item.id === "figaro-fitness" && isFigaroFitnessVisible);
 
               const IconComponent = (
                 isActive ? item.activeIcon : item.icon

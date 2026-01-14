@@ -17,6 +17,8 @@ interface DockIconsVisibility {
   figaroBriefing?: boolean;
   figaroLists?: boolean;
   figaroReminders?: boolean;
+  figaroNutrition?: boolean;
+  figaroFitness?: boolean;
 }
 
 interface DockState {
@@ -34,6 +36,8 @@ interface DockState {
   isFigaroBriefingVisible: boolean;
   isFigaroListsVisible: boolean;
   isFigaroRemindersVisible: boolean;
+  isFigaroNutritionVisible: boolean;
+  isFigaroFitnessVisible: boolean;
 
   dockIconsVisible: DockIconsVisibility;
 
@@ -55,6 +59,8 @@ interface DockState {
   toggleFigaroBriefing: () => void;
   toggleFigaroLists: () => void;
   toggleFigaroReminders: () => void;
+  toggleFigaroNutrition: () => void;
+  toggleFigaroFitness: () => void;
 
   setTimerVisible: (visible: boolean) => void;
   setBreathingVisible: (visible: boolean) => void;
@@ -70,6 +76,8 @@ interface DockState {
   setFigaroBriefingVisible: (visible: boolean) => void;
   setFigaroListsVisible: (visible: boolean) => void;
   setFigaroRemindersVisible: (visible: boolean) => void;
+  setFigaroNutritionVisible: (visible: boolean) => void;
+  setFigaroFitnessVisible: (visible: boolean) => void;
 
   setDockIconVisible: (
     iconId: keyof DockIconsVisibility,
@@ -98,6 +106,8 @@ export const useDockStore = create<DockState>()(
       isFigaroBriefingVisible: false,
       isFigaroListsVisible: false,
       isFigaroRemindersVisible: false,
+      isFigaroNutritionVisible: false,
+      isFigaroFitnessVisible: false,
 
       dockIconsVisible: {
         timer: true,
@@ -114,6 +124,8 @@ export const useDockStore = create<DockState>()(
         figaroBriefing: true,
         figaroLists: true,
         figaroReminders: true,
+        figaroNutrition: true,
+        figaroFitness: true,
       },
 
       showIconLabels: false,
@@ -186,6 +198,14 @@ export const useDockStore = create<DockState>()(
         set((state) => ({ isFigaroRemindersVisible: !state.isFigaroRemindersVisible }));
       },
 
+      toggleFigaroNutrition: () => {
+        set((state) => ({ isFigaroNutritionVisible: !state.isFigaroNutritionVisible }));
+      },
+
+      toggleFigaroFitness: () => {
+        set((state) => ({ isFigaroFitnessVisible: !state.isFigaroFitnessVisible }));
+      },
+
       setTimerVisible: (visible: boolean) => {
         set({ isTimerVisible: visible });
       },
@@ -242,6 +262,14 @@ export const useDockStore = create<DockState>()(
         set({ isFigaroRemindersVisible: visible });
       },
 
+      setFigaroNutritionVisible: (visible: boolean) => {
+        set({ isFigaroNutritionVisible: visible });
+      },
+
+      setFigaroFitnessVisible: (visible: boolean) => {
+        set({ isFigaroFitnessVisible: visible });
+      },
+
       setDockIconVisible: (
         iconId: keyof DockIconsVisibility,
         visible: boolean
@@ -278,6 +306,8 @@ export const useDockStore = create<DockState>()(
           isFigaroBriefingVisible: false,
           isFigaroListsVisible: false,
           isFigaroRemindersVisible: false,
+          isFigaroNutritionVisible: false,
+          isFigaroFitnessVisible: false,
 
           currentOnboardingStep: -1,
         });
@@ -286,7 +316,7 @@ export const useDockStore = create<DockState>()(
     {
       name: "figaro:local:dock",
       storage: createJSONStorage(() => localStorage),
-      version: 9,
+      version: 10,
       migrate: (persistedState: any, _version: number) => {
         const state = { ...persistedState };
         state.dockIconsVisible = state.dockIconsVisible || {};
@@ -325,6 +355,18 @@ export const useDockStore = create<DockState>()(
         }
         if (state.isFigaroRemindersVisible === undefined) {
           state.isFigaroRemindersVisible = false;
+        }
+        if (state.dockIconsVisible.figaroNutrition === undefined) {
+          state.dockIconsVisible.figaroNutrition = true;
+        }
+        if (state.isFigaroNutritionVisible === undefined) {
+          state.isFigaroNutritionVisible = false;
+        }
+        if (state.dockIconsVisible.figaroFitness === undefined) {
+          state.dockIconsVisible.figaroFitness = true;
+        }
+        if (state.isFigaroFitnessVisible === undefined) {
+          state.isFigaroFitnessVisible = false;
         }
         delete state.dockIconsVisible.weather;
         delete state.isWeatherVisible;

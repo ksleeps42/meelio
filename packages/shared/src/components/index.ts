@@ -104,6 +104,12 @@ export * from "./core/figaro-lists";
 // Figaro Reminders
 export * from "./core/figaro-reminders";
 
+// Figaro Nutrition
+export * from "./core/figaro-nutrition";
+
+// Figaro Fitness
+export * from "./core/figaro-fitness";
+
 // Search
 export * from "./core/search";
 

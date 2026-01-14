@@ -20,6 +20,89 @@ export interface FigaroBriefing {
   generatedAt: string; // ISO string
 }
 
+// Nutrition types
+export interface FigaroNutritionTotals {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number;
+  water: number;
+  meals: number;
+}
+
+export interface FigaroNutritionGoals {
+  calories?: { target: number; unit: string };
+  protein?: { target: number; unit: string };
+  carbs?: { target: number; unit: string };
+  fat?: { target: number; unit: string };
+  water?: { target: number; unit: string };
+}
+
+export interface FigaroNutritionLog {
+  id: string;
+  description: string;
+  meal_type: string;
+  calories?: number;
+  protein_g?: number;
+  carbs_g?: number;
+  fat_g?: number;
+  logged_at: string;
+}
+
+export interface FigaroNutrition {
+  date: string;
+  totals: FigaroNutritionTotals;
+  goals: FigaroNutritionGoals;
+  logs: FigaroNutritionLog[];
+}
+
+// Fitness types
+export interface FigaroFitnessSummary {
+  totalWorkouts: number;
+  strengthSessions: number;
+  cardioSessions: number;
+  totalDurationMins: number;
+  caloriesBurned: number;
+  prsHit: number;
+}
+
+export interface FigaroFitnessGoals {
+  workouts?: { target: number; unit: string };
+  cardio_mins?: { target: number; unit: string };
+  strength_sessions?: { target: number; unit: string };
+}
+
+export interface FigaroWorkout {
+  id: string;
+  exercise_name: string;
+  exercise_type: string;
+  sets?: number;
+  reps?: number;
+  weight?: number;
+  duration_mins?: number;
+  is_pr: boolean;
+  logged_at: string;
+}
+
+export interface FigaroPR {
+  id: string;
+  exercise_name: string;
+  pr_type: string;
+  weight?: number;
+  reps?: number;
+  distance?: number;
+  achieved_at: string;
+}
+
+export interface FigaroFitness {
+  weekStart: string;
+  summary: FigaroFitnessSummary;
+  goals: FigaroFitnessGoals;
+  workouts: FigaroWorkout[];
+  recentPRs: FigaroPR[];
+}
+
 export interface FigaroSession {
   token: string;
   expiresAt: number; // Unix timestamp
@@ -41,6 +124,8 @@ export interface FigaroState {
   reminders: FigaroReminder[];
   briefing: FigaroBriefing | null;
   memoriesCount: number;
+  nutrition: FigaroNutrition | null;
+  fitness: FigaroFitness | null;
 
   // Sync state
   lastSyncAt: number | null;
@@ -51,6 +136,8 @@ export interface FigaroState {
   login: (token: string) => Promise<void>;
   logout: () => void;
   sync: () => Promise<void>;
+  fetchNutrition: () => Promise<void>;
+  fetchFitness: () => Promise<void>;
 
   // Helpers
   canAccessFigaroWidgets: () => boolean;
@@ -75,6 +162,8 @@ export const useFigaroStore = create<FigaroState>()(
       reminders: [],
       briefing: null,
       memoriesCount: 0,
+      nutrition: null,
+      fitness: null,
 
       // Initial sync state
       lastSyncAt: null,
@@ -114,6 +203,8 @@ export const useFigaroStore = create<FigaroState>()(
           reminders: [],
           briefing: null,
           memoriesCount: 0,
+          nutrition: null,
+          fitness: null,
           lastSyncAt: null,
           syncError: null,
           isSyncing: false,
@@ -181,6 +272,50 @@ export const useFigaroStore = create<FigaroState>()(
         }
       },
 
+      fetchNutrition: async () => {
+        const { session } = get();
+        if (!session || !get().isSessionValid()) return;
+
+        try {
+          const response = await fetch("https://textfigaro.com/api/nutrition/daily", {
+            headers: {
+              Authorization: `Bearer ${session.token}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch nutrition: ${response.status}`);
+          }
+
+          const data = await response.json();
+          set({ nutrition: data });
+        } catch (error) {
+          console.error("[FigaroStore] Failed to fetch nutrition:", error);
+        }
+      },
+
+      fetchFitness: async () => {
+        const { session } = get();
+        if (!session || !get().isSessionValid()) return;
+
+        try {
+          const response = await fetch("https://textfigaro.com/api/fitness/weekly", {
+            headers: {
+              Authorization: `Bearer ${session.token}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch fitness: ${response.status}`);
+          }
+
+          const data = await response.json();
+          set({ fitness: data });
+        } catch (error) {
+          console.error("[FigaroStore] Failed to fetch fitness:", error);
+        }
+      },
+
       canAccessFigaroWidgets: () => {
         const state = get();
         return state.isAuthenticated && state.isSessionValid();
@@ -208,6 +343,8 @@ export const useFigaroStore = create<FigaroState>()(
         reminders: state.reminders,
         briefing: state.briefing,
         memoriesCount: state.memoriesCount,
+        nutrition: state.nutrition,
+        fitness: state.fitness,
         // Persist sync timestamp
         lastSyncAt: state.lastSyncAt,
       }),
