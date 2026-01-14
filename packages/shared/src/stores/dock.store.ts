@@ -14,6 +14,7 @@ interface DockIconsVisibility {
   notes?: boolean;
   bookmarks?: boolean;
   calendar?: boolean;
+  figaroBriefing?: boolean;
 }
 
 interface DockState {
@@ -28,6 +29,7 @@ interface DockState {
   isNotesVisible: boolean;
   isBookmarksVisible: boolean;
   isCalendarVisible: boolean;
+  isFigaroBriefingVisible: boolean;
 
   dockIconsVisible: DockIconsVisibility;
 
@@ -46,6 +48,7 @@ interface DockState {
   toggleNotes: () => void;
   toggleBookmarks: () => void;
   toggleCalendar: () => void;
+  toggleFigaroBriefing: () => void;
 
   setTimerVisible: (visible: boolean) => void;
   setBreathingVisible: (visible: boolean) => void;
@@ -58,6 +61,7 @@ interface DockState {
   setNotesVisible: (visible: boolean) => void;
   setBookmarksVisible: (visible: boolean) => void;
   setCalendarVisible: (visible: boolean) => void;
+  setFigaroBriefingVisible: (visible: boolean) => void;
 
   setDockIconVisible: (
     iconId: keyof DockIconsVisibility,
@@ -83,6 +87,7 @@ export const useDockStore = create<DockState>()(
       isTabStashVisible: false,
       isBookmarksVisible: false,
       isCalendarVisible: false,
+      isFigaroBriefingVisible: false,
 
       dockIconsVisible: {
         timer: true,
@@ -96,6 +101,7 @@ export const useDockStore = create<DockState>()(
         notes: true,
         bookmarks: true,
         calendar: true,
+        figaroBriefing: true,
       },
 
       showIconLabels: false,
@@ -156,6 +162,10 @@ export const useDockStore = create<DockState>()(
         set((state) => ({ isCalendarVisible: !state.isCalendarVisible }));
       },
 
+      toggleFigaroBriefing: () => {
+        set((state) => ({ isFigaroBriefingVisible: !state.isFigaroBriefingVisible }));
+      },
+
       setTimerVisible: (visible: boolean) => {
         set({ isTimerVisible: visible });
       },
@@ -200,6 +210,10 @@ export const useDockStore = create<DockState>()(
         set({ isCalendarVisible: visible });
       },
 
+      setFigaroBriefingVisible: (visible: boolean) => {
+        set({ isFigaroBriefingVisible: visible });
+      },
+
       setDockIconVisible: (
         iconId: keyof DockIconsVisibility,
         visible: boolean
@@ -233,15 +247,16 @@ export const useDockStore = create<DockState>()(
           isNotesVisible: false,
           isBookmarksVisible: false,
           isCalendarVisible: false,
+          isFigaroBriefingVisible: false,
 
           currentOnboardingStep: -1,
         });
       },
     }),
     {
-      name: "meelio:local:dock",
+      name: "figaro:local:dock",
       storage: createJSONStorage(() => localStorage),
-      version: 7,
+      version: 8,
       migrate: (persistedState: any, _version: number) => {
         const state = { ...persistedState };
         state.dockIconsVisible = state.dockIconsVisible || {};
@@ -262,6 +277,12 @@ export const useDockStore = create<DockState>()(
         }
         if (state.isCalendarVisible === undefined) {
           state.isCalendarVisible = false;
+        }
+        if (state.dockIconsVisible.figaroBriefing === undefined) {
+          state.dockIconsVisible.figaroBriefing = true;
+        }
+        if (state.isFigaroBriefingVisible === undefined) {
+          state.isFigaroBriefingVisible = false;
         }
         delete state.dockIconsVisible.weather;
         delete state.isWeatherVisible;
