@@ -103,6 +103,86 @@ export interface FigaroFitness {
   recentPRs: FigaroPR[];
 }
 
+// People types
+export interface FigaroPerson {
+  id: string;
+  name: string;
+  relationship?: string;
+  birthday?: string;
+  anniversary?: string;
+  contact?: {
+    phone?: string;
+    email?: string;
+  };
+  giftIdeas?: string[];
+}
+
+export interface FigaroUpcomingBirthday {
+  id: string;
+  name: string;
+  relationship?: string;
+  birthday: string;
+  daysUntil: number;
+  giftIdeas?: string[];
+}
+
+export interface FigaroPeople {
+  totalPeople: number;
+  upcomingBirthdays: FigaroUpcomingBirthday[];
+  recentContacts: FigaroPerson[];
+  people: FigaroPerson[];
+}
+
+// Money types
+export interface FigaroExpense {
+  id: string;
+  amount: number;
+  category: string;
+  description: string;
+  merchant?: string;
+  logged_at: string;
+}
+
+export interface FigaroIOU {
+  id: string;
+  person_name: string;
+  direction: 'owed_to_me' | 'i_owe';
+  amount: number;
+  reason?: string;
+  is_settled: boolean;
+}
+
+export interface FigaroSubscription {
+  id: string;
+  name: string;
+  amount: number;
+  frequency: string;
+  next_billing_date?: string;
+}
+
+export interface FigaroMoney {
+  month: string;
+  spending: {
+    total: number;
+    categoryBreakdown: Record<string, number>;
+    transactionCount: number;
+    avgTransaction: number;
+    topMerchant?: string;
+  };
+  ious: {
+    owedToMe: number;
+    iOwe: number;
+    netBalance: number;
+    pendingCount: number;
+    pending: FigaroIOU[];
+  };
+  subscriptions: {
+    active: FigaroSubscription[];
+    monthlyTotal: number;
+  };
+  recentExpenses: FigaroExpense[];
+}
+
 export interface FigaroSession {
   token: string;
   expiresAt: number; // Unix timestamp
@@ -126,6 +206,8 @@ export interface FigaroState {
   memoriesCount: number;
   nutrition: FigaroNutrition | null;
   fitness: FigaroFitness | null;
+  people: FigaroPeople | null;
+  money: FigaroMoney | null;
 
   // Sync state
   lastSyncAt: number | null;
@@ -138,6 +220,8 @@ export interface FigaroState {
   sync: () => Promise<void>;
   fetchNutrition: () => Promise<void>;
   fetchFitness: () => Promise<void>;
+  fetchPeople: () => Promise<void>;
+  fetchMoney: () => Promise<void>;
 
   // Helpers
   canAccessFigaroWidgets: () => boolean;
@@ -164,6 +248,8 @@ export const useFigaroStore = create<FigaroState>()(
       memoriesCount: 0,
       nutrition: null,
       fitness: null,
+      people: null,
+      money: null,
 
       // Initial sync state
       lastSyncAt: null,
@@ -205,6 +291,8 @@ export const useFigaroStore = create<FigaroState>()(
           memoriesCount: 0,
           nutrition: null,
           fitness: null,
+          people: null,
+          money: null,
           lastSyncAt: null,
           syncError: null,
           isSyncing: false,
@@ -316,6 +404,50 @@ export const useFigaroStore = create<FigaroState>()(
         }
       },
 
+      fetchPeople: async () => {
+        const { session } = get();
+        if (!session || !get().isSessionValid()) return;
+
+        try {
+          const response = await fetch("https://textfigaro.com/api/people/summary", {
+            headers: {
+              Authorization: `Bearer ${session.token}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch people: ${response.status}`);
+          }
+
+          const data = await response.json();
+          set({ people: data });
+        } catch (error) {
+          console.error("[FigaroStore] Failed to fetch people:", error);
+        }
+      },
+
+      fetchMoney: async () => {
+        const { session } = get();
+        if (!session || !get().isSessionValid()) return;
+
+        try {
+          const response = await fetch("https://textfigaro.com/api/money/summary", {
+            headers: {
+              Authorization: `Bearer ${session.token}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch money: ${response.status}`);
+          }
+
+          const data = await response.json();
+          set({ money: data });
+        } catch (error) {
+          console.error("[FigaroStore] Failed to fetch money:", error);
+        }
+      },
+
       canAccessFigaroWidgets: () => {
         const state = get();
         return state.isAuthenticated && state.isSessionValid();
@@ -345,6 +477,8 @@ export const useFigaroStore = create<FigaroState>()(
         memoriesCount: state.memoriesCount,
         nutrition: state.nutrition,
         fitness: state.fitness,
+        people: state.people,
+        money: state.money,
         // Persist sync timestamp
         lastSyncAt: state.lastSyncAt,
       }),

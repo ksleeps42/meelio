@@ -30,6 +30,8 @@ import {
   FigaroRemindersSheet,
   FigaroNutritionSheet,
   FigaroFitnessSheet,
+  FigaroPeopleSheet,
+  FigaroMoneySheet,
  } from "@repo/shared";
 import { useAppStore } from "@repo/shared";
 
@@ -76,6 +78,8 @@ const Content = () => {
       <FigaroRemindersSheet />
       <FigaroNutritionSheet />
       <FigaroFitnessSheet />
+      <FigaroPeopleSheet />
+      <FigaroMoneySheet />
       <ShortcutsModal />
     </main>
   );

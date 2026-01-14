@@ -110,6 +110,12 @@ export * from "./core/figaro-nutrition";
 // Figaro Fitness
 export * from "./core/figaro-fitness";
 
+// Figaro People
+export * from "./core/figaro-people";
+
+// Figaro Money
+export * from "./core/figaro-money";
+
 // Search
 export * from "./core/search";
 
