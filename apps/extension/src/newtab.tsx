@@ -25,6 +25,9 @@ import {
   SimpleTimer,
   SearchPopover,
   ShortcutsModal,
+  FigaroBriefingSheet,
+  FigaroListsSheet,
+  FigaroRemindersSheet,
  } from "@repo/shared";
 import { useAppStore } from "@repo/shared";
 
@@ -66,6 +69,9 @@ const Content = () => {
       <TabStashSheet />
       <BookmarksSheet />
       <CalendarSheet />
+      <FigaroBriefingSheet />
+      <FigaroListsSheet />
+      <FigaroRemindersSheet />
       <ShortcutsModal />
     </main>
   );

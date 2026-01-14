@@ -98,6 +98,12 @@ export * from "./core/calendar";
 // Figaro Briefing
 export * from "./core/figaro-briefing";
 
+// Figaro Lists
+export * from "./core/figaro-lists";
+
+// Figaro Reminders
+export * from "./core/figaro-reminders";
+
 // Search
 export * from "./core/search";
 
